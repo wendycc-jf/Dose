@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 
 import useWindowSize from '../../../components/hooks/WindowSize';
-
+import validateServerAccess from '../../../lib/validateServerAccess';
 
 import Styles from '../../../styles/server.module.css';
 
@@ -44,6 +44,28 @@ export default (props) => {
 
     // Check if user have access to this server
     const validateAccess = async (cb) => {
+        /* TODO:
+            Check serverAccesstoken expiry date
+              if < then 5 seconds until expiry:
+                do request to server.server_ip/api/auth/refreshToken with the accessToken and the saved refreshToken
+                  save the new accessToken and refreshToken
+            
+            Check mainAccessToken expiry date:
+              if < then 5 seconds until expiry:
+                do request to mainServer/api/auth/refreshToken with the accessToken and the saved refreshToken
+                  save the new accessToken and refreshToken and call cb()
+
+            If mainAccessToken is close to expire and we did not get a new accessToken from the refresh attempt:
+              Remove the saved mainToken, refreshToken, serverToken and serverRefreshToken and redirect to /login
+            
+            If serverToken is close to expire and we did not get a new accessToken from the refresh attempt:
+              
+        */
+
+        if (cookie.get('serverToken') != null && cookie.get('serverToken') != undefined) {
+            cb();
+            return;
+        }
         return await fetch(`${server.server_ip}/api/auth/validate`, {
             method: 'POST',
             headers: {
@@ -89,6 +111,15 @@ export default (props) => {
                     limit: 20
                 })
             })
+            .then((r) => {
+                if (r.status === 403) {
+                    cookie.remove('serverToken');
+                    cookie.remove('token');
+                    Router.push('/login');
+                } else {
+                    return r;
+                }
+            })
             .then((r) => r.json())
             .then((response) => {
                 // Mark the movies active image
@@ -116,6 +147,8 @@ export default (props) => {
                     }
                 });
                 resolve(response.result);
+            }).catch(error => {
+                console.log(error);
             });
         });
     }
@@ -280,10 +313,9 @@ export default (props) => {
     }
 
     useEffect(() => {
-        validateAccess(() => {
+        validateServerAccess(server, () => {
             // Get all the newest released movies (The slieshow)
             getMovieList(null, 'release_date', 5).then(movies => {
-                movies.reverse();
                 let movieElements = [];
                 for (let movie of movies) {
                     let img = movie.backdrop !== null ? `https://image.tmdb.org/t/p/original/${movie.backdrop}` : 'https://via.placeholder.com/2000x1000' 

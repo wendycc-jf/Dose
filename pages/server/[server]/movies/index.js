@@ -5,6 +5,7 @@ import cookie from 'js-cookie';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
+import validateServerAccess from '../../../../lib/validateServerAccess';
 
 
 import Styles from '../../../../styles/server.module.css';
@@ -110,7 +111,7 @@ export default (props) => {
     }
 
     useEffect(() => {
-        validateAccess(() => {
+        validateServerAccess(server, () => {
             // Get all the newest released movies (The slieshow)
             getMovieList(null, 'release_date', 5).then(movies => {
                 movies.reverse();
@@ -148,11 +149,6 @@ export default (props) => {
                 }
                 setOngoingMovies(movieElements);
             });
-
-            
-
-
-
 
             // Get all genres from the server
             fetch(`${server.server_ip}/api/genre/list?token=${cookie.get('serverToken')}`, {

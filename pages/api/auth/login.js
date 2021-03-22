@@ -45,14 +45,20 @@ export default async function handle(req, res) {
             },
             hash.getJWTSecret(),
             {
-                expiresIn: 300000, // 50 min
+                expiresIn: 3600, // 1h
             },
         );
 
-        res.status(200).json({
-            status: 'success',
-            message: 'success',
-            token: token
+        const refreshToken = hash.generateRefreshToken();
+        const encryptedRefreshToken = hash.getHashWithoutSalt(refreshToken);
+        const encryptedAccessToken = hash.getHashWithoutSalt(token);
+        db.none('INSERT into user_access_token (user_id, access_token, refresh_token) VALUES($1, $2, $3)',[user.id, encryptedAccessToken, encryptedRefreshToken]).then(() => {
+            res.status(200).json({
+                status: 'success',
+                message: 'success',
+                token: token,
+                refreshToken: refreshToken
+            });
         });
     } catch (e) {
         console.error(e);
@@ -62,4 +68,3 @@ export default async function handle(req, res) {
         });
     }
 };
-

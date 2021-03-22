@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
+    "cookies": "^0.8.0",
     "didyoumean": "^1.2.1",
     "hls.js": "^0.13.2",
     "js-cookie": "^2.2.1",

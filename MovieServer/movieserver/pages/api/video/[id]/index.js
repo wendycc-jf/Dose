@@ -51,6 +51,8 @@ export default async (req, res) => {
 
 
     var stat = fs.statSync(filename);
+    var total = stat.size;
+    /*
     var start = 0;
     var end = 0;
     var range = req.headers.range;
@@ -60,25 +62,42 @@ export default async (req, res) => {
       end = parseInt(range.slice(range.indexOf('-')+1,
       range.length));
     }
+    */
 
+    var range = req.headers.range
+    , parts = range.replace(/bytes=/, "").split("-")
+    , partialstart = parts[0]
+    , partialend = parts[1]
+    , start = parseInt(partialstart, 10)
+    , end = partialend ? parseInt(partialend, 10) : total-1
+    , chunksize = (end-start)+1
+
+    console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize +  "\n")
+    console.log('TOTAL: ' + total);
+
+    /*
     if (isNaN(end) || end == 0) {
       end = stat.size-1;
       //end = start + 1000;
     }
+    */
 
     var duration = (end / 1024) * 8 / 1024;
 
     res.writeHead(200, { // NOTE: a partial http response
-        'Accept-Ranges': 'bytes',
-        'Connection':'keep-alive', // Maybe should be keep-alive? To prevent ERR_INCOMPLETE_CHUNKED_ENCODING 200 after video paus
-        'Content-Range':'bytes '+start+'-'+end+'/*',
-        'Transfer-Encoding':'chunked',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        "Content-Disposition":"inline",
-        "Content-Transfer-Enconding":"binary",
-        'Content-Type': 'video/mp4'
+      'Transfer-Encoding': 'chunked'
+      , 'Content-Type': 'audio/mpeg'
+      , 'Accept-Ranges': 'bytes'
     });
+   /*
+   res.writeHead(206, {
+     'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
+     'Accept-Ranges': 'bytes',
+     'Content-Length': chunksize,
+     'Content-Type': 'video/mp4',
+     'Transfer-Encoding':'chunked',
+   });
+   */
 
     let offset = req.query.start ? req.query.start : 0;
     startFFMPEG(filename, offset, language, req, res);
@@ -223,7 +242,8 @@ function startFFMPEG(filename, offset, language, req, res) {
           done();
         }, function() {
           // save to stream and start the transcoding
-          proc.output(res,{ end:true }).run();
+          //proc.output(res,{ end:true }).run();
+          proc.pipe(res, {end: true});
 
         });
 

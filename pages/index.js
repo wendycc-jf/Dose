@@ -11,6 +11,7 @@ const fetcher = url =>
   fetch(url)
     .then(r => {
       return r.json().then(result => {
+        console.log(result);
         if (result.error !== undefined && result.error === 'unauthorized') {
           Router.push(`/login`);
         }

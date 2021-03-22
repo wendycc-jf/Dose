@@ -6,6 +6,7 @@ import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
 
+import validateServerAccess from '../../../../lib/validateServerAccess';
 
 import Styles from '../../../../styles/server.module.css';
 
@@ -162,7 +163,7 @@ export default (props) => {
     }
 
     useEffect(() => {
-        validateAccess(() => {
+        validateServerAccess(server, () => {
             // Get all the newest released movies (The slieshow)
             getMovieList(null, 'added_date', 5).then(movies => {
                 movies.reverse();
