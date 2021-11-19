@@ -17,7 +17,7 @@ pipeline {
         stage('Build Main Server') {
             steps {
                 echo 'Building main server..'
-                dockerImage = docker.build(mainServerImageName, "-f Dockerfile ./ContentServer")
+                dockerImage = docker.build(mainServerImageName, "./MainServer/Dockerfile")
             }
         }
         stage('Publish Main Server') {
