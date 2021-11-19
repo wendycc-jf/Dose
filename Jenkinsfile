@@ -1,5 +1,5 @@
 pipeline {
-    agent stage-1
+    agent "stage-1"
 
     environment {
       mainServerImageName = "jalafoundation/dose-main-server"
