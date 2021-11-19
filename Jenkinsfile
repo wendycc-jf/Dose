@@ -17,7 +17,7 @@ pipeline {
         stage('Build Main Server') {
             steps {
                 echo 'Building main server..'
-                dockerImage = docker.build imagename "-f Dockerfile ./ContentServer"
+                dockerImage = docker.build mainServerImageName "-f Dockerfile ./ContentServer"
             }
         }
         stage('Publish Main Server') {
@@ -42,8 +42,8 @@ pipeline {
         }
         stage('Cleanup') {
             steps {
-                sh "docker rmi $imagename:$BUILD_NUMBER"
-                sh "docker rmi $imagename:latest"
+                sh "docker rmi $mainServerImageName:$BUILD_NUMBER"
+                sh "docker rmi $mainServerImageName:latest"
             }
         }
     }
