@@ -17,18 +17,20 @@ pipeline {
         stage('Build Main Server') {
             steps {
                 echo 'Building main server..'
-                dockerImage = docker.build(mainServerImageName, "./MainServer/Dockerfile")
+                script {
+                  dockerImage = docker.build(mainServerImageName, "./MainServer/Dockerfile")
+                }
             }
         }
         stage('Publish Main Server') {
-          steps {
-            script {
-              docker.withRegistry( '', registryCredential ) {
-                dockerImage.push("$BUILD_NUMBER")
-                 dockerImage.push('latest')
+            steps {
+              script {
+                docker.withRegistry( '', registryCredential ) {
+                  dockerImage.push("$BUILD_NUMBER")
+                   dockerImage.push('latest')
+                 }
                }
-             }
-          }
+            }
         }
         stage('Test') {
             steps {
