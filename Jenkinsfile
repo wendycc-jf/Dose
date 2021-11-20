@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Cloning Git') {
           steps {
-            git([url: 'https://github.com/jala-bootcamp/Dose.git', branch: 'enable_ci'])
+            git([url: 'https://github.com/wendycc-jf/Dose.git', branch: 'enable_ci'])
           }
         }
         stage('Build Main Server') {
