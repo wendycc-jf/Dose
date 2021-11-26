@@ -22,8 +22,8 @@ class Watcher {
      * @param {Function} cb - The function to be called after the class is initialized.
      */
     async init(cb) {
-        //await this.syncDatabase();
-        //await this.fetchLibraries();
+        await this.syncDatabase();
+        await this.fetchLibraries();
         this.initialized = true;
         cb();
 
