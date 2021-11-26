@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "babel-node-version": "babel-node --version",
     "dev": "nodemon --exec babel-node server.js",
     "build": "next build",
     "linuxStart": "NODE_ENV=production node server.js",
     "windowsStart": "node server.js"
   },
   "dependencies": {
-    "@babel/preset-react": "^7.10.1",
+    "@babel/preset-react": "^7.16.0",
     "async-lock": "^1.2.4",
     "babel-loader": "^8.1.0",
     "babel-preset-react": "^6.24.1",
@@ -19,15 +18,15 @@
     "glob": "^7.1.6",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.5",
-    "next": "^10.1.3",
-    "next-useragent": "^2.5.1",
+    "next": "^12.0.4",
+    "next-useragent": "^2.8.0",
     "node-async-locks": "^2.0.0",
     "node-fetch": "^2.6.0",
     "opensubtitles-api": "^5.1.2",
     "path-exists": "^4.0.0",
     "pg-promise": "^10.5.5",
-    "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
