@@ -23,16 +23,16 @@ pipeline {
             }
         }
         
-        stage('Publish Main Server') {
-            steps {
-              script {
-                docker.withRegistry( '', registryCredential ) {
-                  dockerImage.push("$BUILD_NUMBER")
-                   dockerImage.push('latest')
-                 }
-               }
-            }
-        }
+        // stage('Publish Main Server') {
+        //     steps {
+        //       script {
+        //         docker.withRegistry( '', registryCredential ) {
+        //           dockerImage.push("$BUILD_NUMBER")
+        //            dockerImage.push('latest')
+        //          }
+        //        }
+        //     }
+        // }
         stage('Build Content Server') {
             steps {
                 echo 'Building content server...'
@@ -41,16 +41,16 @@ pipeline {
                 }
             }
         }
-        stage('Publish Content Server') {
-            steps {
-              script {
-                docker.withRegistry( '', registryCredential ) {
-                  dockerImage.push("$BUILD_NUMBER")
-                   dockerImage.push('latest')
-                 }
-               }
-            }
-        }
+        // stage('Publish Content Server') {
+        //     steps {
+        //       script {
+        //         docker.withRegistry( '', registryCredential ) {
+        //           dockerImage.push("$BUILD_NUMBER")
+        //            dockerImage.push('latest')
+        //          }
+        //        }
+        //     }
+        // }
         stage('Test') {
             steps {
                 echo 'Testing..'
