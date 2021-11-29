@@ -4,6 +4,7 @@ pipeline {
     environment {
       mainServerImageName = "jalafoundation/dose-main-server"
       contentServerImageName = "jalafoundation/dose-content-server"
+      databaseServerImageName = "jalafoundation/dose-database-server"
       registryCredential = '4f2fcb8d-b172-4173-9f71-67c36b6addaf'
       dockerImage = ''
     }
@@ -49,6 +50,14 @@ pipeline {
                    dockerImage.push('latest')
                  }
                }
+            }
+        }
+         stage('Build Database Server') {
+            steps {
+                echo 'Building content server...'
+                script {
+                  dockerImage = docker.build(databaseServerImageName, "./DatabaseServeer")
+                }
             }
         }
         stage('Test') {
