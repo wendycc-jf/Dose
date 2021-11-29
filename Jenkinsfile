@@ -56,7 +56,7 @@ pipeline {
             steps {
                 echo 'Building content server...'
                 script {
-                  dockerImage = docker.build(databaseServerImageName, "./DatabaseServeer")
+                  dockerImage = docker.build(databaseServerImageName, "./DatabaseServer")
                 }
             }
         }
